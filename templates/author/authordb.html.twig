@@ -1,0 +1,21 @@
+<table align="center" border="1"> 
+    <caption>List of Authors </caption>
+    <tr>
+        <td>Id</td>
+        <td>Username</td>
+        <td>Email</td>
+    </tr>
+    
+    {%for a in list %}
+    
+    <tr>
+        <td>{{a.id}}</td>
+        <td>{{a.username |upper}}</td>
+        <td>{{a.email}}</td>
+        <td><a href="">Détails</a>
+        </td>
+    </tr>
+    {%endfor%}
+    
+</table>
+

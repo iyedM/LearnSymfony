@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Author;
+use App\Repository\AuthorRepository;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -23,20 +26,53 @@ class AuthorController extends AbstractController
                 "data"=>$this->authors
             ]);
     }
+
     
-    #[Route('/authorDetails/{identity}', name:'authordetails_app')]
+    #[Route('/authorDetails/{identity}', name:'author_details')]
     public function authorDetails($identity){
-        $newAuthor= null;
 
-        foreach($this->authors as $a){
-            if($a['id']== $identity){
-                $newAuthor = $a;
-            }
+        //$newAuthor= null;
 
-        }
+        // foreach($this->authors as $a){
+        //     if($a['id']== $identity){
+        //         $newAuthor = $a;
+        //     }
 
-        return $this ->render("author/showAuthor.html.twig", ["author"=> $newAuthor]);
+        // }
+
+       // return $this ->render("author/showAuthor.html.twig", ["author"=> $newAuthor]);
+        return $this ->render("author/showAuthor.html.twig", ["id"=> $identity]);
+
     }
+
+    //function to list authors in a table
+    #[Route('/listAuthors', name:"list_author")]
+    public function listAuthorsFromDB( AuthorRepository $repo)
+    {
+        $authors = $repo->findAll();
+        return $this->render("author/authordb.html.twig", ["list"=>$authors]);
+        // on peut faire : ["list"=> $repo->findAll() direct sans utiliser le ligne authors ]
+
+    }
+
+// function to add an author manually
+    #[Route('addAuth')]
+    public function addAuthors(ManagerRegistry $doctrine){
+        $em = $doctrine->getManager();
+        $author = new Author();
+
+        $author->setUsername("Eline");
+        $author->setEmail("eline@gmail.com");
+
+
+        $em->persist($author);
+        $em->flush(); //pour l'execution
+
+       // return $this->render("author/add.html.twig", []);
+        return $this->redirectToRoute("list_author"); // on l'utilise pour directement afficher l'author dans le tableau 
+    }
+
+    
     
 }
 
