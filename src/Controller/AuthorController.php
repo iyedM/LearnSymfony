@@ -56,13 +56,13 @@ class AuthorController extends AbstractController
     }
 
 // function to add an author manually
-    #[Route('addAuth')]
+    #[Route('addAuth', name:"add_author")]
     public function addAuthors(ManagerRegistry $doctrine){
         $em = $doctrine->getManager();
         $author = new Author();
 
-        $author->setUsername("Eline");
-        $author->setEmail("eline@gmail.com");
+        $author->setUsername("Julia");
+        $author->setEmail("julia@gmail.com");
 
 
         $em->persist($author);
