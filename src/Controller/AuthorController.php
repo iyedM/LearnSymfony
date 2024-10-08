@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Author;
+use App\Form\AuthorType as FormAuthorType;
 use App\Repository\AuthorRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -72,7 +74,24 @@ class AuthorController extends AbstractController
         return $this->redirectToRoute("list_author"); // on l'utilise pour directement afficher l'author dans le tableau 
     }
 
-    
-    
+    // we use symfony console make:form AuthorType
+    #[Route('/add', name:'author_add_form')]
+    public function add(Request $request, ManagerRegistry $doctrine) {
+        $author=new Author();
+        $form = $this-> createForm(FormAuthorType::class, $author);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $doctrine->getManager();
+            if($author->getUsername()!="" && $author->getEmail()!=""){
+                $em->persist($author);
+                $em->flush();
+                $this->addFlash('sucess', 'Author added successfully');
+                return $this->redirectToRoute("list_author");
+            }
+
+    }  
+    return $this->renderForm("author/add.html.twig", ["formulaire" => $form]);
+
 }
 
+}
