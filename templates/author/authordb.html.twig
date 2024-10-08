@@ -4,6 +4,9 @@
         <td>Id</td>
         <td>Username</td>
         <td>Email</td>
+        <td>Details</td>
+        <td>Update</td>
+        <td>Delete</td>
     </tr>
     
     {%for a in list %}
@@ -12,8 +15,10 @@
         <td>{{a.id}}</td>
         <td>{{a.username |upper}}</td>
         <td>{{a.email}}</td>
-        <td><a href="">Détails</a>
+        <td><a href="#">Détails</a>
         </td>
+        <td><a href="{{path('update',{'id':a.id})}}"> Update</a></td>
+        <td><a href="{{path('delete', {'id':a.id})}}">Delete</a></td>
     </tr>
     {%endfor%}
     
